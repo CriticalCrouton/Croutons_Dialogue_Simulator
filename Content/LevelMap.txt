@@ -1,0 +1,13 @@
+/Key for levelmap use (basic right now)
+/# = walkable tile
+/* = collidable tile
+
+/For the playspaceX and playspaceY, use the tile width/length (use square tiles) multiplied by the count of the row or column.
+
+#######
+#######
+#######
+#######
+#*###**
+***#***
+#######
