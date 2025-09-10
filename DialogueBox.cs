@@ -121,6 +121,8 @@ namespace Croutons_Dialogue_Simulator
             }
             return formatter.ToString();
         }
+
+        //Add a method for the formatting of questions and player-input scenarios
     }
     
 }
