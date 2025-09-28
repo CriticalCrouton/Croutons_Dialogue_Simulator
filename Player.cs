@@ -13,8 +13,8 @@ using System.Threading.Tasks;
 public enum PlayerState
 {
     Movement,
-    Talking,
-    Interaction
+    Interact,
+    Choice
 }
 
 public enum PlayerMoveState
@@ -36,6 +36,7 @@ namespace Croutons_Dialogue_Simulator
     {
         //Player fields (general)
         private Texture2D[] sprites;
+        private Texture2D arrowIndicator;
         private PlayerState currentState;
         private Vector2 position;
         private Rectangle hitbox;
@@ -46,6 +47,15 @@ namespace Croutons_Dialogue_Simulator
         private Animation[] walkCycles;
         private PlayerMoveState moveState;
         private PlayerAnimState animationState;
+
+
+        /// <summary>
+        /// Accessor for this fucking arrow, which somehow is the most vital part of all of this
+        /// </summary>
+        public Texture2D ArrowIndicator
+        {
+            get { return arrowIndicator; }
+        }
 
         /// <summary>
         /// Accessor for the position of the player
@@ -77,10 +87,11 @@ namespace Croutons_Dialogue_Simulator
         /// This will create a player at a preset position in the movement state
         /// </summary>
         /// <param name="sprite"></param>
-        public Player(Texture2D[] sprites, Animation[] walkCycles)
+        public Player(Texture2D[] sprites, Animation[] walkCycles, Texture2D arrowIndicator)
         {
             this.sprites = sprites;
             this.walkCycles = walkCycles;
+            this.arrowIndicator = arrowIndicator;
             currentState = PlayerState.Movement;
             position = new Vector2(30, 30); //Arbitrary right now
             hitbox = new Rectangle((int)position.X + 12, (int)position.Y, sprites[0].Width - 24, sprites[0].Height);
@@ -281,8 +292,13 @@ namespace Croutons_Dialogue_Simulator
                 currentKeyState = Keyboard.GetState();
                 if(SingleKeyPress(Keys.Z, currentKeyState, prevKeyState))
                 {
-                    currentState = PlayerState.Talking;
+                    currentState = PlayerState.Interact;
                 }
+                /*else if(SingleKeyPress(Keys.Z, currentKeyState, prevKeyState && NPCDetail == HasQuestion))
+                {
+                    currentState = PlayerState.Choice;
+                }
+                */
                 prevKeyState = currentKeyState;
             }
         }
@@ -294,7 +310,7 @@ namespace Croutons_Dialogue_Simulator
         public void Interdeactivate(NPC anyNPC)
         {
             bool withinField = NPCCollisions(anyNPC.InteractField);
-            if (withinField == true && currentState == PlayerState.Talking)
+            if (withinField == true && currentState == PlayerState.Interact)
             {
                 currentKeyState = Keyboard.GetState();
                 if (SingleKeyPress(Keys.Z, currentKeyState, prevKeyState))

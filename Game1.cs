@@ -78,7 +78,9 @@ namespace Croutons_Dialogue_Simulator
             playerWalkCycles[2] = new Animation(back, 4, 1, 4, 6);
             playerWalkCycles[3] = new Animation(left, 4, 1, 4, 6);
 
-            player = new Player(playerSprites, playerWalkCycles);
+            Texture2D fuckinArrow = Content.Load<Texture2D>("InteractionArrow");
+
+            player = new Player(playerSprites, playerWalkCycles, fuckinArrow);
 
             //Loading NPCs
             Texture2D fruitcakeSprite = Content.Load<Texture2D>("Fruitcake");
@@ -157,7 +159,7 @@ namespace Croutons_Dialogue_Simulator
                     player.Interactivate(npc);
                 }
             }
-            else if (player.CurrentState == PlayerState.Talking)
+            else if (player.CurrentState == PlayerState.Interact)
             {
                 foreach (NPC npc in testZone.NPCs)
                 {

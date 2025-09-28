@@ -104,7 +104,7 @@ namespace Croutons_Dialogue_Simulator
             //Somewhere in the midst of all this, choices will have to be programmed
             //(For now, just focus on keyboard-press interactions
 
-            if (player.CurrentState == PlayerState.Talking)
+            if (player.CurrentState == PlayerState.Interact)
             {
                 if (interactedOnce == false && interactedTwice == false)
                 {
@@ -130,6 +130,46 @@ namespace Croutons_Dialogue_Simulator
                     {
                         NPCbox.DisplayDialogue(sb, dialogue["SECOND"]);
                     }
+                }
+            }
+
+            if (player.CurrentState == PlayerState.Choice)
+            {
+                if(dialogue.ContainsKey("PRECHOICE"))
+                {
+                    NPCbox.DisplayDialogue(sb, dialogue["PRECHOICE"]);
+                }
+                //One-option
+                if (dialogue.ContainsKey("ChoiceA") && dialogue.ContainsKey("ChoiceB") == false && dialogue.ContainsKey("ChoiceC") == false && dialogue.ContainsKey("ChoiceD") == false)
+                {
+                    DialogueChoice oneChoice = new DialogueChoice(NPCbox);
+                    string[] choices = { dialogue["ChoiceA"]};
+                    string[] responses = { dialogue["ResponseA"]};
+                    oneChoice.SingleChoice(sb, choices, responses);
+                }
+                //Two-option
+                if (dialogue.ContainsKey("ChoiceA") && dialogue.ContainsKey("ChoiceB") && dialogue.ContainsKey("ChoiceC") == false && dialogue.ContainsKey("ChoiceD") == false)
+                {
+                    DialogueChoice twoChoice = new DialogueChoice(NPCbox);
+                    string[] choices = { dialogue["ChoiceA"], dialogue["ChoiceB"] };
+                    string[] responses = { dialogue["ResponseA"], dialogue["ResponseB"] };
+                    twoChoice.MultiChoice(sb, choices, responses);
+                }
+                //Three-option
+                if (dialogue.ContainsKey("ChoiceA") && dialogue.ContainsKey("ChoiceB") && dialogue.ContainsKey("ChoiceC") && dialogue.ContainsKey("ChoiceD") == false)
+                {
+                    DialogueChoice threeChoice = new DialogueChoice(NPCbox);
+                    string[] choices = { dialogue["ChoiceA"], dialogue["ChoiceB"], dialogue["ChoiceC"] };
+                    string[] responses = { dialogue["ResponseA"], dialogue["ResponseB"], dialogue["ResponseC"] };
+                    threeChoice.MultiChoice(sb, choices, responses);
+                }
+                //Four-option
+                if (dialogue.ContainsKey("ChoiceA") && dialogue.ContainsKey("ChoiceB") && dialogue.ContainsKey("ChoiceC") && dialogue.ContainsKey("ChoiceD"))
+                {
+                    DialogueChoice fourChoice = new DialogueChoice(NPCbox);
+                    string[] choices = { dialogue["ChoiceA"], dialogue["ChoiceB"], dialogue["ChoiceC"], dialogue["ChoiceD"] };
+                    string[] responses = { dialogue["ResponseA"], dialogue["ResponseB"], dialogue["ResponseC"], dialogue["ResponseD"] };
+                    fourChoice.MultiChoice(sb, choices, responses);
                 }
             }
         }

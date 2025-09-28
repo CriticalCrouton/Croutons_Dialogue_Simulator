@@ -27,6 +27,7 @@ namespace Croutons_Dialogue_Simulator
         private Rectangle positionRect;
         private SpriteFont font;
         private SoundEffect textSound;
+        private DialogueChoice choice;
         private Color currentColor;
         bool effectPlayed = false;
 
@@ -72,6 +73,32 @@ namespace Croutons_Dialogue_Simulator
             {
                 textSound.Play();
                 effectPlayed = true;
+            }
+        }
+
+        public void DisplayChoice(SpriteBatch sb, string[] options)
+        {
+            if (options.Length == 1)
+            {
+                sb.DrawString(font, options[0], new Vector2(positionRect.X + 144, positionRect.Y + 60), Color.White);
+            }
+            if (options.Length == 2)
+            {
+                sb.DrawString(font, options[0], new Vector2(positionRect.X + 144, positionRect.Y + 60), Color.White);
+                sb.DrawString(font, options[1], new Vector2(positionRect.X + 244, positionRect.Y + 60), Color.White);
+            }
+            if (options.Length == 3)
+            {
+                sb.DrawString(font, options[0], new Vector2(positionRect.X + 144, positionRect.Y + 60), Color.White);
+                sb.DrawString(font, options[1], new Vector2(positionRect.X + 244, positionRect.Y + 60), Color.White);
+                sb.DrawString(font, options[2], new Vector2(positionRect.X + 144, positionRect.Y + 90), Color.White);
+            }
+            if (options.Length == 4)
+            {
+                sb.DrawString(font, options[0], new Vector2(positionRect.X + 144, positionRect.Y + 60), Color.White);
+                sb.DrawString(font, options[1], new Vector2(positionRect.X + 244, positionRect.Y + 60), Color.White);
+                sb.DrawString(font, options[2], new Vector2(positionRect.X + 144, positionRect.Y + 90), Color.White);
+                sb.DrawString(font, options[3], new Vector2(positionRect.X + 244, positionRect.Y + 90), Color.White);
             }
         }
 
