@@ -51,6 +51,7 @@ namespace Croutons_Dialogue_Simulator
         private Vector2 position;
         private Rectangle hitbox;
         private Circle interactField;
+        private bool hasQuestion;
         private DialogueBox NPCbox;
 
         //NPC fields (Animation(s));
@@ -64,6 +65,7 @@ namespace Croutons_Dialogue_Simulator
         public Circle InteractField { get { return interactField; } }
         public bool InteractedOnce { get { return interactedOnce; } set { interactedOnce = value; } }
         public bool InteractedTwice { get { return interactedTwice; } set { interactedTwice = value; } }
+        public bool HasQuestion { get { return hasQuestion; } set { hasQuestion = value; } }
         public DialogueBox NPCDialogueBox { get { return NPCbox; } }
         public NPCstate AnimationState { get { return animationState; } set { animationState = value;} }
         public Animation Idle { get { return idleAnimation; } }
@@ -75,7 +77,7 @@ namespace Croutons_Dialogue_Simulator
         /// <param name="sprite">The NPC's sprite</param>
         /// <param name="dialogue">The dialogue dictionary for the NPC</param>
         /// <param name="location">The location that the NPC starts at</param>
-        public NPC(Texture2D sprite, Animation idle, Dictionary<string, string> dialogue, Vector2 location, DialogueBox aDBox)
+        public NPC(Texture2D sprite, Animation idle, Dictionary<string, string> dialogue, Vector2 location,bool hasQuestion, DialogueBox aDBox)
         {
             //Animation details
             this.sprite = sprite;
@@ -86,6 +88,7 @@ namespace Croutons_Dialogue_Simulator
             this.dialogue = dialogue;
             interactedOnce = false;
             interactedTwice = false;
+            this.hasQuestion = hasQuestion;
             NPCbox = aDBox;
 
             //Functional information
@@ -101,9 +104,7 @@ namespace Croutons_Dialogue_Simulator
         /// <param name="player">The user-controlled player</param>
         public void TalkToEm(SpriteBatch sb, Player player)
         {
-            //Somewhere in the midst of all this, choices will have to be programmed
-            //(For now, just focus on keyboard-press interactions
-
+            //Basic "talking" NPCs.
             if (player.CurrentState == PlayerState.Interact)
             {
                 if (interactedOnce == false && interactedTwice == false)
@@ -133,6 +134,7 @@ namespace Croutons_Dialogue_Simulator
                 }
             }
 
+            //Active "Talking" NPCs.
             if (player.CurrentState == PlayerState.Choice)
             {
                 if(dialogue.ContainsKey("PRECHOICE"))
@@ -142,7 +144,7 @@ namespace Croutons_Dialogue_Simulator
                 //One-option
                 if (dialogue.ContainsKey("ChoiceA") && dialogue.ContainsKey("ChoiceB") == false && dialogue.ContainsKey("ChoiceC") == false && dialogue.ContainsKey("ChoiceD") == false)
                 {
-                    DialogueChoice oneChoice = new DialogueChoice(NPCbox);
+                    DialogueChoice oneChoice = new DialogueChoice(player, NPCbox);
                     string[] choices = { dialogue["ChoiceA"]};
                     string[] responses = { dialogue["ResponseA"]};
                     oneChoice.SingleChoice(sb, choices, responses);
@@ -150,7 +152,7 @@ namespace Croutons_Dialogue_Simulator
                 //Two-option
                 if (dialogue.ContainsKey("ChoiceA") && dialogue.ContainsKey("ChoiceB") && dialogue.ContainsKey("ChoiceC") == false && dialogue.ContainsKey("ChoiceD") == false)
                 {
-                    DialogueChoice twoChoice = new DialogueChoice(NPCbox);
+                    DialogueChoice twoChoice = new DialogueChoice(player, NPCbox);
                     string[] choices = { dialogue["ChoiceA"], dialogue["ChoiceB"] };
                     string[] responses = { dialogue["ResponseA"], dialogue["ResponseB"] };
                     twoChoice.MultiChoice(sb, choices, responses);
@@ -158,7 +160,7 @@ namespace Croutons_Dialogue_Simulator
                 //Three-option
                 if (dialogue.ContainsKey("ChoiceA") && dialogue.ContainsKey("ChoiceB") && dialogue.ContainsKey("ChoiceC") && dialogue.ContainsKey("ChoiceD") == false)
                 {
-                    DialogueChoice threeChoice = new DialogueChoice(NPCbox);
+                    DialogueChoice threeChoice = new DialogueChoice(player, NPCbox);
                     string[] choices = { dialogue["ChoiceA"], dialogue["ChoiceB"], dialogue["ChoiceC"] };
                     string[] responses = { dialogue["ResponseA"], dialogue["ResponseB"], dialogue["ResponseC"] };
                     threeChoice.MultiChoice(sb, choices, responses);
@@ -166,7 +168,7 @@ namespace Croutons_Dialogue_Simulator
                 //Four-option
                 if (dialogue.ContainsKey("ChoiceA") && dialogue.ContainsKey("ChoiceB") && dialogue.ContainsKey("ChoiceC") && dialogue.ContainsKey("ChoiceD"))
                 {
-                    DialogueChoice fourChoice = new DialogueChoice(NPCbox);
+                    DialogueChoice fourChoice = new DialogueChoice(player, NPCbox);
                     string[] choices = { dialogue["ChoiceA"], dialogue["ChoiceB"], dialogue["ChoiceC"], dialogue["ChoiceD"] };
                     string[] responses = { dialogue["ResponseA"], dialogue["ResponseB"], dialogue["ResponseC"], dialogue["ResponseD"] };
                     fourChoice.MultiChoice(sb, choices, responses);

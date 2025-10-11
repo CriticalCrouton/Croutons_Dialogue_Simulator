@@ -48,6 +48,11 @@ namespace Croutons_Dialogue_Simulator
             this.textSound = textSound;
         }
 
+        public Rectangle PositionRect
+        {
+            get { return positionRect; }
+        }
+
         /// <summary>
         /// Get-set accessor for the sound effect. Will allow for reset of use (while sound effects are single use.
         /// </summary>

@@ -146,7 +146,6 @@ namespace Croutons_Dialogue_Simulator
                 {
                     moveState = PlayerMoveState.Still;
                 }
-                
             }
         }
 
@@ -279,6 +278,99 @@ namespace Croutons_Dialogue_Simulator
                 return false; //Returns false for no collision
             }
         }
+        public int MakeYourSingleChoice(SpriteBatch sb, DialogueChoice theChoice)
+        {
+            if (currentState == PlayerState.Choice)
+            {
+                currentKeyState = Keyboard.GetState();
+                DrawArrow(sb, new Vector2(theChoice.DialogueBox.PositionRect.X + 124, theChoice.DialogueBox.PositionRect.Y + 60));
+                if (SingleKeyPress(Keys.Z, currentKeyState, prevKeyState))
+                {
+                    return 0;
+                }
+                prevKeyState = currentKeyState;
+            }
+            return 0;
+        }
+
+        public int MakeYourMultiChoice(SpriteBatch sb, DialogueChoice theChoice)
+        {
+            if (currentState == PlayerState.Choice)
+            {
+                currentKeyState = Keyboard.GetState();
+                if (SingleKeyPress(Keys.W, currentKeyState, prevKeyState))
+                {
+                    if (theChoice.ChoiceIndex == 1)
+                    {
+                        theChoice.ChoiceIndex = 0;
+                    }
+                    if (theChoice.ChoiceIndex == 3)
+                    {
+                        theChoice.ChoiceIndex = 2;
+                    }
+                }
+                if (SingleKeyPress(Keys.S, currentKeyState, prevKeyState))
+                {
+                    if (theChoice.ChoiceIndex == 0)
+                    {
+                        theChoice.ChoiceIndex = 1;
+                    }
+                    if (theChoice.ChoiceIndex == 2)
+                    {
+                        theChoice.ChoiceIndex = 3;
+                    }
+                }
+                if (SingleKeyPress(Keys.D, currentKeyState, prevKeyState))
+                {
+                    if (theChoice.ChoiceIndex == 0)
+                    {
+                        theChoice.ChoiceIndex = 2;
+                    }
+                    if (theChoice.ChoiceIndex == 1)
+                    {
+                        theChoice.ChoiceIndex = 3;
+                    }
+                }
+                if (SingleKeyPress(Keys.A, currentKeyState, prevKeyState))
+                {
+                    if (theChoice.ChoiceIndex == 2)
+                    {
+                        theChoice.ChoiceIndex = 0;
+                    }
+                    if (theChoice.ChoiceIndex == 3)
+                    {
+                        theChoice.ChoiceIndex = 1;
+                    }
+                }
+                Vector2 pos = new Vector2(0, 0);
+                if (theChoice.ChoiceIndex == 0)
+                {
+                    pos = new Vector2(theChoice.DialogueBox.PositionRect.X + 124, theChoice.DialogueBox.PositionRect.Y + 60);
+                }
+                if (theChoice.ChoiceIndex == 1)
+                {
+                    pos = new Vector2(theChoice.DialogueBox.PositionRect.X + 224, theChoice.DialogueBox.PositionRect.Y + 60);
+                }
+                if (theChoice.ChoiceIndex == 2)
+                {
+                    pos = new Vector2(theChoice.DialogueBox.PositionRect.X + 124, theChoice.DialogueBox.PositionRect.Y + 90);
+                }
+                if (theChoice.ChoiceIndex == 3)
+                {
+                    pos = new Vector2(theChoice.DialogueBox.PositionRect.X + 224, theChoice.DialogueBox.PositionRect.Y + 90);
+                }
+                DrawArrow(sb, pos);
+
+                if (SingleKeyPress(Keys.Z, currentKeyState, prevKeyState))
+                {
+                    return theChoice.ChoiceIndex;
+                }
+                prevKeyState = currentKeyState;
+            }
+            
+            //This should NEVER happen
+            return -1;
+        }
 
         /// <summary>
         /// A method that activates interaction with NPCs while in the movement state
@@ -290,15 +382,15 @@ namespace Croutons_Dialogue_Simulator
             if (withinField == true && currentState == PlayerState.Movement)
             {
                 currentKeyState = Keyboard.GetState();
-                if(SingleKeyPress(Keys.Z, currentKeyState, prevKeyState))
+                if(SingleKeyPress(Keys.Z, currentKeyState, prevKeyState) && anyNPC.HasQuestion == false)
                 {
                     currentState = PlayerState.Interact;
                 }
-                /*else if(SingleKeyPress(Keys.Z, currentKeyState, prevKeyState && NPCDetail == HasQuestion))
+                else if(SingleKeyPress(Keys.Z, currentKeyState, prevKeyState) && anyNPC.HasQuestion == true)
                 {
                     currentState = PlayerState.Choice;
                 }
-                */
+                
                 prevKeyState = currentKeyState;
             }
         }
@@ -310,7 +402,7 @@ namespace Croutons_Dialogue_Simulator
         public void Interdeactivate(NPC anyNPC)
         {
             bool withinField = NPCCollisions(anyNPC.InteractField);
-            if (withinField == true && currentState == PlayerState.Interact)
+            if (withinField == true && currentState == PlayerState.Interact || currentState == PlayerState.Choice)
             {
                 currentKeyState = Keyboard.GetState();
                 if (SingleKeyPress(Keys.Z, currentKeyState, prevKeyState))
@@ -426,6 +518,10 @@ namespace Croutons_Dialogue_Simulator
             }
         }
 
+        public void DrawArrow(SpriteBatch sb, Vector2 pos)
+        {
+            sb.Draw(arrowIndicator, pos, Color.White);
+        }
         
     }
 }

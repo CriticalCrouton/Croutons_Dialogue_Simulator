@@ -99,7 +99,7 @@ namespace Croutons_Dialogue_Simulator
                                            fruitcakeText,
                                            fruitcakeTextSound);
             Animation fruitcakeIdleAnimation = new Animation(fruitcakeIdle, 4, 1, 4, 6);
-            fruitcake = new NPC(fruitcakeSprite, fruitcakeIdleAnimation, fruitcakeTextDictionary, new Vector2(320, 32), fruitcakeBox);
+            fruitcake = new NPC(fruitcakeSprite, fruitcakeIdleAnimation, fruitcakeTextDictionary, new Vector2(320, 32), false, fruitcakeBox);
             List<NPC> testNPCList = new List<NPC>();
             testNPCList.Add(fruitcake);
 
@@ -118,9 +118,25 @@ namespace Croutons_Dialogue_Simulator
                                             probetheusText,
                                             probetheusTextSound);
             Animation probetheusIdleAnimation = new Animation(probetheusIdle, 6, 1, 6, 6);
-            probetheus = new NPC(probetheusSprite, probetheusIdleAnimation, probetheusTextDictionary, new Vector2(320, 228), probetheusBox);
+            probetheus = new NPC(probetheusSprite, probetheusIdleAnimation, probetheusTextDictionary, new Vector2(320, 228), false, probetheusBox);
             testNPCList.Add(probetheus);
 
+            Texture2D mork1Sprite = Content.Load<Texture2D>("MORK");
+            Texture2D mork1Idle = Content.Load<Texture2D>("MORKAnim");
+            Texture2D mork1Portrait = Content.Load<Texture2D>("MORKportrait");
+            Dictionary<string, string> mork1TextDictionary = new Dictionary<string, string>();
+            mork1TextDictionary.Add("PRECHOICE", "What's my name?");
+            mork1TextDictionary.Add("ChoiceA", "MORK!");
+            mork1TextDictionary.Add("ResponseA", "YES!!!!");
+            SoundEffect mork1TextSound = Content.Load<SoundEffect>("MorkSound");
+            DialogueBox mork1Box = new DialogueBox(dialogueBoxTexture,
+                                                   mork1Portrait,
+                                                   new Rectangle(35, 300, dialogueBoxTexture.Width, dialogueBoxTexture.Height),
+                                                   fruitcakeText,
+                                                   mork1TextSound);
+            Animation mork1IdleAnimation = new Animation(mork1Idle, 4, 1, 4, 6);
+            NPC mork1 = new NPC(mork1Sprite, mork1IdleAnimation, mork1TextDictionary, new Vector2(320, 468), true, mork1Box);
+            testNPCList.Add(mork1);
 
             
 
@@ -159,7 +175,7 @@ namespace Croutons_Dialogue_Simulator
                     player.Interactivate(npc);
                 }
             }
-            else if (player.CurrentState == PlayerState.Interact)
+            else if (player.CurrentState == PlayerState.Interact || player.CurrentState == PlayerState.Choice)
             {
                 foreach (NPC npc in testZone.NPCs)
                 {

@@ -17,39 +17,50 @@ namespace Croutons_Dialogue_Simulator
     internal class DialogueChoice
     {
         private int choiceIndex;
+        private Player choiceMaker;
         private DialogueBox dialogueBox;
 
-        public DialogueChoice(DialogueBox displayBox)
+        public int ChoiceIndex
+        {
+            get { return choiceIndex; }
+            set { choiceIndex = value; }
+        }
+        public DialogueBox DialogueBox
+        {
+            get { return dialogueBox; }
+        }
+        public DialogueChoice(Player choiceMaker, DialogueBox displayBox)
         {
             dialogueBox = displayBox;
+            this.choiceMaker = choiceMaker;
             choiceIndex = 0;
         }
 
         public void SingleChoice(SpriteBatch sb, string[] option, string[] response)
         {
             dialogueBox.DisplayChoice(sb, option);
-            //Allow Choice (Program in player)
-            //dialogueBox.DisplayDialogue(response based on choice)
+            int zero = choiceMaker.MakeYourSingleChoice(sb, this);
+            dialogueBox.DisplayDialogue(sb, response[zero]);
         }
         public void MultiChoice(SpriteBatch sb, string[] options, string[] responses)
         {
             if (options.Length == 2 && responses.Length == 2)
             {
                 dialogueBox.DisplayChoice(sb, options);
-                //Allow Choice (Program in player)
-                //dialogueBox.DisplayDialogue(response based on choice)
+                int response = choiceMaker.MakeYourMultiChoice(sb, this);
+                dialogueBox.DisplayDialogue(sb, responses[response]);
             }
             else if (options.Length == 3 && responses.Length == 3)
             {
                 dialogueBox.DisplayChoice(sb, options);
-                //Allow Choice (Program in player)
-                //dialogueBox.DisplayDialogue(response based on choice)
+                int response = choiceMaker.MakeYourMultiChoice(sb, this);
+                dialogueBox.DisplayDialogue(sb, responses[response]);
             }
             else if (options.Length == 4 && responses.Length == 4)
             {
                 dialogueBox.DisplayChoice(sb, options);
-                //Allow Choice (Program in player)
-                //dialogueBox.DisplayDialogue(response based on choice)
+                int response = choiceMaker.MakeYourMultiChoice(sb, this);
+                dialogueBox.DisplayDialogue(sb, responses[response]);
             }
         }
     }
