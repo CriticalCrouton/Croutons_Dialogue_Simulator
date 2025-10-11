@@ -282,6 +282,7 @@ namespace Croutons_Dialogue_Simulator
         {
             if (currentState == PlayerState.Choice)
             {
+                //"Breakpoint" here (Code repeats indefinitely until condition is met
                 currentKeyState = Keyboard.GetState();
                 DrawArrow(sb, new Vector2(theChoice.DialogueBox.PositionRect.X + 124, theChoice.DialogueBox.PositionRect.Y + 60));
                 if (SingleKeyPress(Keys.Z, currentKeyState, prevKeyState))
@@ -293,10 +294,13 @@ namespace Croutons_Dialogue_Simulator
             return 0;
         }
 
+        //Possible idea for "breakpoint". Have arrow-based code in a separate method and a boolean to keep track if "z" has been pressed or not.
+        //If it hasn't been pressed, the method is called again. RECURSION FROM 106!!! YOU REMEMBER!!! YOU'RE BEAUTIFUL!!!
         public int MakeYourMultiChoice(SpriteBatch sb, DialogueChoice theChoice)
         {
             if (currentState == PlayerState.Choice)
             {
+                //"Breakpoint" here. (Code repeats indefinitely until condition is met)
                 currentKeyState = Keyboard.GetState();
                 if (SingleKeyPress(Keys.W, currentKeyState, prevKeyState))
                 {
