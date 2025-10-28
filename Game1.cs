@@ -128,6 +128,12 @@ namespace Croutons_Dialogue_Simulator
             mork1TextDictionary.Add("PRECHOICE", "What's my name?");
             mork1TextDictionary.Add("ChoiceA", "MORK!");
             mork1TextDictionary.Add("ResponseA", "YES!!!!");
+            mork1TextDictionary.Add("ChoiceB", "BLORK!");
+            mork1TextDictionary.Add("ResponseB", "NO!!!!");
+            mork1TextDictionary.Add("ChoiceC", "CLORK!");
+            mork1TextDictionary.Add("ResponseC", "NO!!!!");
+            mork1TextDictionary.Add("ChoiceD", "Athabascus");
+            mork1TextDictionary.Add("ResponseD", "You will be buried in a shallow grave");
             SoundEffect mork1TextSound = Content.Load<SoundEffect>("MorkSound");
             DialogueBox mork1Box = new DialogueBox(dialogueBoxTexture,
                                                    mork1Portrait,

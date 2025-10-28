@@ -48,6 +48,9 @@ namespace Croutons_Dialogue_Simulator
         private PlayerMoveState moveState;
         private PlayerAnimState animationState;
 
+        //Player fields (selection)
+        private bool selectionMade;
+
 
         /// <summary>
         /// Accessor for this fucking arrow, which somehow is the most vital part of all of this
@@ -82,6 +85,22 @@ namespace Croutons_Dialogue_Simulator
             get { return currentState; }
         }
 
+        public KeyboardState CurrentKey
+        {
+            get { return currentKeyState; }
+        }
+
+        public KeyboardState PreviousKey
+        {
+            get { return prevKeyState; }
+        }
+
+
+        public bool SelectionMade
+        {
+            get { return selectionMade; }
+        }
+
 
         /// <summary>
         /// This will create a player at a preset position in the movement state
@@ -96,6 +115,7 @@ namespace Croutons_Dialogue_Simulator
             position = new Vector2(30, 30); //Arbitrary right now
             hitbox = new Rectangle((int)position.X + 12, (int)position.Y, sprites[0].Width - 24, sprites[0].Height);
             prevKeyState = Keyboard.GetState();
+            selectionMade = false;
         }
 
 
@@ -282,14 +302,14 @@ namespace Croutons_Dialogue_Simulator
         {
             if (currentState == PlayerState.Choice)
             {
-                //"Breakpoint" here (Code repeats indefinitely until condition is met
-                currentKeyState = Keyboard.GetState();
-                DrawArrow(sb, new Vector2(theChoice.DialogueBox.PositionRect.X + 124, theChoice.DialogueBox.PositionRect.Y + 60));
-                if (SingleKeyPress(Keys.Z, currentKeyState, prevKeyState))
+                if (selectionMade == false)
                 {
-                    return 0;
+                    currentKeyState = Keyboard.GetState();
+                    DrawArrow(sb, new Vector2(theChoice.DialogueBox.PositionRect.X + 124, theChoice.DialogueBox.PositionRect.Y + 60));
+                    selectionMade = (SingleKeyPress(Keys.Z, currentKeyState, prevKeyState));
+                    prevKeyState = currentKeyState;
                 }
-                prevKeyState = currentKeyState;
+                return 0;
             }
             return 0;
         }
@@ -300,80 +320,77 @@ namespace Croutons_Dialogue_Simulator
         {
             if (currentState == PlayerState.Choice)
             {
-                //"Breakpoint" here. (Code repeats indefinitely until condition is met)
-                currentKeyState = Keyboard.GetState();
-                if (SingleKeyPress(Keys.W, currentKeyState, prevKeyState))
+                if (selectionMade == false)
                 {
-                    if (theChoice.ChoiceIndex == 1)
+                    currentKeyState = Keyboard.GetState();
+                    if (SingleKeyPress(Keys.W, currentKeyState, prevKeyState))
                     {
-                        theChoice.ChoiceIndex = 0;
+                        if (theChoice.ChoiceIndex == 2)
+                        {
+                            theChoice.ChoiceIndex = 0;
+                        }
+                        if (theChoice.ChoiceIndex == 3)
+                        {
+                            theChoice.ChoiceIndex = 1;
+                        }
                     }
-                    if (theChoice.ChoiceIndex == 3)
+                    if (SingleKeyPress(Keys.S, currentKeyState, prevKeyState))
                     {
-                        theChoice.ChoiceIndex = 2;
+                        if (theChoice.ChoiceIndex == 0)
+                        {
+                            theChoice.ChoiceIndex = 2;
+                        }
+                        if (theChoice.ChoiceIndex == 1)
+                        {
+                            theChoice.ChoiceIndex = 3;
+                        }
                     }
-                }
-                if (SingleKeyPress(Keys.S, currentKeyState, prevKeyState))
-                {
+                    if (SingleKeyPress(Keys.D, currentKeyState, prevKeyState))
+                    {
+                        if (theChoice.ChoiceIndex == 0)
+                        {
+                            theChoice.ChoiceIndex = 1;
+                        }
+                        if (theChoice.ChoiceIndex == 2)
+                        {
+                            theChoice.ChoiceIndex = 3;
+                        }
+                    }
+                    if (SingleKeyPress(Keys.A, currentKeyState, prevKeyState))
+                    {
+                        if (theChoice.ChoiceIndex == 1)
+                        {
+                            theChoice.ChoiceIndex = 0;
+                        }
+                        if (theChoice.ChoiceIndex == 3)
+                        {
+                            theChoice.ChoiceIndex = 2;
+                        }
+                    }
+                    Vector2 pos = new Vector2(0, 0);
                     if (theChoice.ChoiceIndex == 0)
                     {
-                        theChoice.ChoiceIndex = 1;
+                        pos = new Vector2(theChoice.DialogueBox.PositionRect.X + 124, theChoice.DialogueBox.PositionRect.Y + 60);
+                    }
+                    if (theChoice.ChoiceIndex == 1)
+                    {
+                        pos = new Vector2(theChoice.DialogueBox.PositionRect.X + 224, theChoice.DialogueBox.PositionRect.Y + 60);
                     }
                     if (theChoice.ChoiceIndex == 2)
                     {
-                        theChoice.ChoiceIndex = 3;
-                    }
-                }
-                if (SingleKeyPress(Keys.D, currentKeyState, prevKeyState))
-                {
-                    if (theChoice.ChoiceIndex == 0)
-                    {
-                        theChoice.ChoiceIndex = 2;
-                    }
-                    if (theChoice.ChoiceIndex == 1)
-                    {
-                        theChoice.ChoiceIndex = 3;
-                    }
-                }
-                if (SingleKeyPress(Keys.A, currentKeyState, prevKeyState))
-                {
-                    if (theChoice.ChoiceIndex == 2)
-                    {
-                        theChoice.ChoiceIndex = 0;
+                        pos = new Vector2(theChoice.DialogueBox.PositionRect.X + 124, theChoice.DialogueBox.PositionRect.Y + 90);
                     }
                     if (theChoice.ChoiceIndex == 3)
                     {
-                        theChoice.ChoiceIndex = 1;
+                        pos = new Vector2(theChoice.DialogueBox.PositionRect.X + 224, theChoice.DialogueBox.PositionRect.Y + 90);
                     }
+                    DrawArrow(sb, pos);
+                    selectionMade = SingleKeyPress(Keys.Z, currentKeyState, prevKeyState);
+                    prevKeyState = currentKeyState;
                 }
-                Vector2 pos = new Vector2(0, 0);
-                if (theChoice.ChoiceIndex == 0)
-                {
-                    pos = new Vector2(theChoice.DialogueBox.PositionRect.X + 124, theChoice.DialogueBox.PositionRect.Y + 60);
-                }
-                if (theChoice.ChoiceIndex == 1)
-                {
-                    pos = new Vector2(theChoice.DialogueBox.PositionRect.X + 224, theChoice.DialogueBox.PositionRect.Y + 60);
-                }
-                if (theChoice.ChoiceIndex == 2)
-                {
-                    pos = new Vector2(theChoice.DialogueBox.PositionRect.X + 124, theChoice.DialogueBox.PositionRect.Y + 90);
-                }
-                if (theChoice.ChoiceIndex == 3)
-                {
-                    pos = new Vector2(theChoice.DialogueBox.PositionRect.X + 224, theChoice.DialogueBox.PositionRect.Y + 90);
-                }
-                DrawArrow(sb, pos);
-
-                if (SingleKeyPress(Keys.Z, currentKeyState, prevKeyState))
-                {
-                    return theChoice.ChoiceIndex;
-                }
-                prevKeyState = currentKeyState;
+                return theChoice.ChoiceIndex;
             }
-            
-            //This should NEVER happen
-            return -1;
+            return 0;
         }
 
         /// <summary>
@@ -409,7 +426,7 @@ namespace Croutons_Dialogue_Simulator
             if (withinField == true && currentState == PlayerState.Interact || currentState == PlayerState.Choice)
             {
                 currentKeyState = Keyboard.GetState();
-                if (SingleKeyPress(Keys.Z, currentKeyState, prevKeyState))
+                if (SingleKeyPress(Keys.Z, currentKeyState, prevKeyState) && currentState == PlayerState.Interact)
                 {
                     //Resets the sound effect
                     anyNPC.NPCDialogueBox.EffectPlayed = false;
@@ -429,7 +446,17 @@ namespace Croutons_Dialogue_Simulator
                     //Changes the state back to movement
                     currentState = PlayerState.Movement;
                 }
+                
+                //If this is enabled, selection doesn't work. If it's disabled, you can't leave after responding
+                /*
+                if (selectionMade == true && SingleKeyPress(Keys.Z, currentKeyState, prevKeyState) && currentState == PlayerState.Choice)
+                {
+                    //Resets the sound effect
+                    anyNPC.NPCDialogueBox.EffectPlayed = false;
+                    currentState = PlayerState.Movement;
+                }
                 prevKeyState = currentKeyState;
+                */
             }
         }
 
@@ -440,7 +467,7 @@ namespace Croutons_Dialogue_Simulator
         /// <param name="currentState">The state of the keyboard at the current frame</param>
         /// <param name="previousState">The state of the keyboard at the previous frame</param>
         /// <returns></returns>
-        private bool SingleKeyPress(Keys key, KeyboardState currentState, KeyboardState previousState)
+        public bool SingleKeyPress(Keys key, KeyboardState currentState, KeyboardState previousState)
         {
             if (currentState.IsKeyDown(key) == true && previousState.IsKeyDown(key) == false)
             {
